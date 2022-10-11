@@ -3,7 +3,7 @@ import Head from 'next/head'
 import useWindowSize from '@/hooks/useWindowSize'
 
 import Link from 'next/link'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 
 export default function Nav({ innerRef, title }) {
     const windowSize = useWindowSize()
@@ -12,9 +12,6 @@ export default function Nav({ innerRef, title }) {
     const [navHeight, setNavHeight] = useState(0)
     const [theme, setTheme] = useState('dark')
 
-    const headerRef = innerRef ?? useRef()
-    const navRef = useRef()
-
     function handleNavToggle() {
         setCollapsed(!isCollapsed)
     }
@@ -22,7 +19,9 @@ export default function Nav({ innerRef, title }) {
     return (
         <nav ref={headerRef} className="dark:bg-slate-100">
             <div className="flex relative px-3 py-2">
-                <a className="self-center text-xl pr-4" href="/">Tools</a>
+                <Link href="/">
+                    <a className="self-center text-xl pr-4">Tools</a>
+                </Link>
                 <div className="border-l-2 border-l-slate-900"></div>
                 <div className="self-center text-xl pl-4">{title}</div>
                 <div className="flex flex-row-reverse grow">
@@ -44,10 +43,10 @@ export default function Nav({ innerRef, title }) {
                 </div>
             </div>
             <div className={`absolute top-0${isCollapsed ? ' hidden ' : ' '}w-full h-screen z-40`} onClick={handleNavToggle} />
-            <div className={`bg-slate-100 absolute right-1 overflow-hidden${isCollapsed ? ' hidden ' : ' '}sm:rounded sm:shadow-md w-screen sm:w-auto mt-1 z-50`}>
-                <ul ref={navRef} className="p-1">
+            <div className={`bg-slate-100 absolute right-1 overflow-hidden${isCollapsed ? ' hidden ' : ' '}sm:rounded sm:shadow-md w-screen sm:w-56 mt-1 z-50`}>
+                <ul className="p-1">
                     <li>
-                        <Link className="block hover:text-info w-full p-2" href="/svgtools">SVG Tools</Link>
+                        <Link href="/svgtools"><a className="block hover:text-info w-full p-2">SVG Tools</a></Link>
                     </li>
                 </ul>
             </div>

@@ -3,9 +3,13 @@ import Link from 'next/link'
 export default function Footer({ content }) {
     content = content ?? <p>
         {"Made by "}
-        <Link href="https://github.com/mavenskylab" target="_blank" rel="noopener noreferrer">mavenskylab</Link>
+        <Link href="https://github.com/mavenskylab" target="_blank" rel="noopener noreferrer">
+            <a>mavenskylab</a>
+        </Link>
         {". Source code available at "}
-        <Link href="https://github.com/mavenskylab" target="_blank" rel="noopener noreferrer">Github</Link>
+        <Link href="https://github.com/mavenskylab" target="_blank" rel="noopener noreferrer">
+            <a>Github</a>
+        </Link>
         .
     </p>
 
