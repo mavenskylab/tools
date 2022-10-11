@@ -17,7 +17,7 @@ export default function Nav({ innerRef, title }) {
     }
 
     return (
-        <nav ref={headerRef} className="dark:bg-slate-100">
+        <nav className="dark:bg-slate-100">
             <div className="flex relative px-3 py-2">
                 <Link href="/">
                     <a className="self-center text-xl pr-4">Tools</a>
