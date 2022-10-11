@@ -2,7 +2,8 @@ import Head from 'next/head'
 
 import useWindowSize from '@/hooks/useWindowSize'
 
-import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link'
+import React, { useState, useEffect, useRef } from 'react'
 
 export default function Nav({ innerRef, title }) {
     const windowSize = useWindowSize()
@@ -46,7 +47,7 @@ export default function Nav({ innerRef, title }) {
             <div className={`bg-slate-100 absolute right-1 overflow-hidden${isCollapsed ? ' hidden ' : ' '}sm:rounded sm:shadow-md w-screen sm:w-auto mt-1 z-50`}>
                 <ul ref={navRef} className="p-1">
                     <li>
-                        <a className="block hover:text-info w-full p-2" href="/svgtools">SVG Tools</a>
+                        <Link className="block hover:text-info w-full p-2" href="/svgtools">SVG Tools</Link>
                     </li>
                 </ul>
             </div>
