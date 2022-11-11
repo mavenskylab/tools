@@ -10,7 +10,8 @@ export const SVG_ACTION_TYPES = {
     SELECT_PATH: 5,
     UPDATE_PATH: 6,
     MOUSE_ENTER: 7,
-    MOUSE_LEAVE: 8
+    MOUSE_LEAVE: 8,
+    SET_MEASUREMENT_COLLAPSED: 9
 }
 
 function reducer(svg, { type, payload}) {
@@ -44,6 +45,11 @@ function reducer(svg, { type, payload}) {
             return pathMouseEnter(payload)
         case SVG_ACTION_TYPES.MOUSE_LEAVE:
             return pathMouseLeave(payload)
+        case SVG_ACTION_TYPES.SET_MEASUREMENT_COLLAPSED:
+            return {
+                ...svg,
+                measurementCollapsed: payload
+            }
         default:
             return svg
     }
@@ -91,7 +97,9 @@ function reducer(svg, { type, payload}) {
 
             return {
                 ...svg,
-                paths: paths
+                paths: paths,
+                selected: pathId,
+                measurementCollapsed: false
             }
         }
 
@@ -101,7 +109,9 @@ function reducer(svg, { type, payload}) {
         return {
             ...svg,
             paths: paths,
-            groups: groups
+            groups: groups,
+            selected: pathId,
+            measurementCollapsed: false
         }
     }
 
@@ -128,7 +138,8 @@ function reducer(svg, { type, payload}) {
     
         return {
             ...svg,
-            selected: pathId
+            selected: pathId,
+            measurementCollapsed: false
         }
         
     }
@@ -167,5 +178,5 @@ function reducer(svg, { type, payload}) {
 }
 
 export default function svgReducer() {
-    return useReducer(reducer, { paths: {}, groups: {}, groupOrder: [], selected: undefined })
+    return useReducer(reducer, { paths: {}, groups: {}, groupOrder: [], selected: undefined, measurementCollapsed: true })
 }

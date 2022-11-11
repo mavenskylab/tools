@@ -9,16 +9,16 @@ import DoubleChevron from '@/buttons/doubleChevron'
 
 import svgReducer, { SVG_ACTION_TYPES } from '@/hooks/svgReducer'
 
-import { useState } from 'react'
-
 export default function Home() {
     const [svg, svgDispatch] = svgReducer()
-    const [isMeasurementCollapsed, setMeasurementCollapsed] = useState(true)
 
+    function setMeasurementCollapsed(payload) {
+        svgDispatch({ type: SVG_ACTION_TYPES.SET_MEASUREMENT_COLLAPSED, payload: payload })
+    }
 
     const sidebarContent = (
         <>
-            <GroupList svg={svg} dispatch={svgDispatch} setMeasurementCollapsed={setMeasurementCollapsed} />
+            <GroupList svg={svg} dispatch={svgDispatch} />
             <button type="button" onClick={() => svgDispatch({ type: SVG_ACTION_TYPES.ADD_POLYGON })}>Add Polygon</button>
         </>
     )
@@ -32,9 +32,9 @@ export default function Home() {
             </div>
             <div className={`bg-slate-200 h-full`}>
                 <div className="bg-slate-300 p-1">
-                    <DoubleChevron isCollapsed={isMeasurementCollapsed} setCollapsed={setMeasurementCollapsed} rotation={180} delay={'delay-200'} />
+                    <DoubleChevron isCollapsed={svg.measurementCollapsed} setCollapsed={setMeasurementCollapsed} rotation={180} delay={'delay-200'} />
                 </div>
-                <div className={`overflow-x-hidden transition-size duration-300 ${isMeasurementCollapsed ? 'w-0 pl-14' : 'w-56'}`}>
+                <div className={`overflow-x-hidden transition-size duration-300 ${svg.measurementCollapsed ? 'w-0 pl-14' : 'w-56'}`}>
                     <PathDetails svg={svg} dispatch={svgDispatch} />
                 </div>
             </div>
