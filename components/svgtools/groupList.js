@@ -1,10 +1,36 @@
 import Group from './group'
 
+import { SVG_ACTION_TYPES } from '@/hooks/svgReducer'
+
 import { DragDropContext, Droppable, resetServerContext } from 'react-beautiful-dnd'
 
 export default function GroupList({ svg, dispatch }) {
 
-    function onDragEnd() {
+    function onDragEnd(result) {
+        const { draggableId, source, destination } = result
+
+        if (!destination) {
+            return
+        }
+
+        if (source.droppableId === destination.droppableId && source.index === destination.index) {
+            return
+        }
+
+        source.groupId = source.droppableId
+        delete source.droppableId
+
+        destination.groupId = destination.droppableId
+        delete destination.droppableId
+
+        dispatch({ 
+            type: SVG_ACTION_TYPES.ORDER_PATH,
+            payload: {
+                pathId: draggableId, 
+                source, 
+                destination
+            }
+        })
 
     }
 

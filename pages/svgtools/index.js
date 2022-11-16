@@ -1,7 +1,7 @@
 import BorderPane from '@/layouts/borderPane'
 
 import Sidebar from '@/components/sidebar'
-import Vector from '@/components/svgtools/vector'
+import GroupVector from '@/components/svgtools/groupVector'
 import PathDetails from '@/components/svgtools/pathDetails'
 import GroupList from '@/components/svgtools/groupList'
 
@@ -27,7 +27,7 @@ export default function Home() {
         <div className="flex gap-x-1 h-full">
             <div className="bg-slate-200 grow h-full">
                 <svg className="bg-white max-w-full max-h-full preview" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                    {Object.entries(svg.paths).map(([id, path]) => <Vector key={id} id={id} path={path} dispatch={svgDispatch} />)}
+                    {Object.entries(svg.groups).map(([id, group]) => <GroupVector key={id} group={group} paths={svg.paths} dispatch={svgDispatch} />)}
                 </svg>
             </div>
             <div className={`bg-slate-200 h-full`}>

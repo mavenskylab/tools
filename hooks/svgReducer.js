@@ -4,17 +4,19 @@ import { v4 as uuidv4 } from 'uuid'
 export const SVG_ACTION_TYPES = {
     ADD_GROUP: 0,
     DEL_GROUP: 1,
-    ADD_PATH: 2,
-    ADD_POLYGON: 3,
-    DEL_PATH: 4,
-    SELECT_PATH: 5,
-    UPDATE_PATH: 6,
-    MOUSE_ENTER: 7,
-    MOUSE_LEAVE: 8,
-    SET_MEASUREMENT_COLLAPSED: 9
+    ORDER_GROUP: 2,
+    ADD_PATH: 3,
+    ADD_POLYGON: 4,
+    DEL_PATH: 5,
+    SELECT_PATH: 6,
+    UPDATE_PATH: 7,
+    ORDER_PATH: 8,
+    MOUSE_ENTER: 9,
+    MOUSE_LEAVE: 10,
+    SET_MEASUREMENT_COLLAPSED: 11
 }
 
-function reducer(svg, { type, payload}) {
+function reducer(svg, { type, payload }) {
     switch (type) {
         case SVG_ACTION_TYPES.ADD_GROUP:
             return addGroup()
@@ -41,6 +43,8 @@ function reducer(svg, { type, payload}) {
             return selectPath(payload)
         case SVG_ACTION_TYPES.UPDATE_PATH:
             return updatePath(payload)
+        case SVG_ACTION_TYPES.ORDER_PATH:
+            return orderPath(payload.pathId, payload.source, payload.destination)
         case SVG_ACTION_TYPES.MOUSE_ENTER:
             return pathMouseEnter(payload)
         case SVG_ACTION_TYPES.MOUSE_LEAVE:
@@ -56,8 +60,7 @@ function reducer(svg, { type, payload}) {
 
     function addGroup(pathId) {
         const groupId = uuidv4()
-        const groups = { ...svg.groups }
-        const groupOrder = [...svg.groupOrder]
+        const { groups, groupOrder } = structuredClone(svg)
 
         groups[groupId] = [pathId] ?? []
         groupOrder.push(groupId)
@@ -70,9 +73,7 @@ function reducer(svg, { type, payload}) {
     }
 
     function delGroup(groupId) {
-        const paths = { ...svg.path }
-        const groups = { ...svg.groups }
-        const groupOrder = [...svg.groupOrder]
+        const { paths, groups, groupOrder } = structuredClone(svg)
 
         groups[groupId].map(pathId => delete paths[pathId])
         delete groups[groupId]
@@ -86,9 +87,13 @@ function reducer(svg, { type, payload}) {
         }
     }
 
+    function orderGroup(groupId) {
+
+    }
+
     function addPath(path) {
         const pathId = uuidv4()
-        const paths = { ...svg.paths }
+        const { paths } = structuredClone(svg)
 
         paths[pathId] = path
 
@@ -103,7 +108,7 @@ function reducer(svg, { type, payload}) {
             }
         }
 
-        const groups = { ...svg.groups }
+        const { groups } = structuredClone(svg)
         groups[[...svg.groupOrder].pop()].push(pathId)
 
         return {
@@ -116,8 +121,7 @@ function reducer(svg, { type, payload}) {
     }
 
     function delPath(pathId) {
-        const paths = { ...svg.paths }
-        const groups = { ...svg.groups }
+        const { paths, groups } = structuredClone(svg)
 
         delete paths[pathId]
         Object.keys(groups).map(id => {
@@ -135,17 +139,17 @@ function reducer(svg, { type, payload}) {
         if (!svg.paths[pathId]) {
             return svg
         }
-    
+
         return {
             ...svg,
             selected: pathId,
             measurementCollapsed: false
         }
-        
+
     }
 
     function updatePath(path) {
-        const paths = { ...svg.paths }
+        const { paths } = structuredClone(svg)
         paths[svg.selected] = path
 
         return {
@@ -154,8 +158,20 @@ function reducer(svg, { type, payload}) {
         }
     }
 
+    function orderPath(pathId, source, destination) {
+        const { groups } = structuredClone(svg)
+
+        groups[source.groupId].splice(source.index, 1)
+        groups[destination.groupId].splice(destination.index, 0, pathId)
+        
+        return {
+            ...svg,
+            groups: groups
+        }
+    }
+
     function pathMouseEnter(pathId) {
-        const paths = { ...svg.paths }
+        const { paths } = structuredClone(svg)
 
         paths[pathId].hover = true
 
@@ -166,7 +182,7 @@ function reducer(svg, { type, payload}) {
     }
 
     function pathMouseLeave(pathId) {
-        const paths = { ...svg.paths }
+        const { paths } = structuredClone(svg)
 
         paths[pathId].hover = false
 
